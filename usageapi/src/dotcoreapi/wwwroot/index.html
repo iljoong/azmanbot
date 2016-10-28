@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/style.css"></link>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css"></link>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <title>Azmanbot registration</title>
+</head>
+<body>
+    <h2>AzmanBot</h2>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#onboard').click(function () {
+
+                // get uif from url query string, valid url form http://url.com/?uid=xxxxx
+                var url = window.location.href
+                var uid = url.match(/(?:uid)\=([\S\s]*?)$/)[1];
+                //alert(uid);
+
+                var _url = 'https://<host url>/api/register/' + uid;
+
+                var _body = {
+                    tenant_id: $('#tenantid').val(),
+                    client_id: $('#clientid').val(),
+                    client_secret: $('#clientsecret').val(),
+                    subscription: $('#subscription').val()
+                }
+
+                var _headers = {
+                    'Content-Type': 'application/json;charset=utf-8'
+                };
+
+                $.ajax({
+                    url: _url,
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: _headers,
+                    data: JSON.stringify(_body),    // NOTE: send as text not json object!!!
+                    success: function (result) {
+                        //alert(result);
+
+                        window.location.href = '/success.html';
+                    },
+                    error: function (error) {
+                        alert('error');
+                    }
+
+                });
+
+            });
+      });
+
+    </script>
+
+    <p>Register Azure Management Information for AzmanBot</p>
+    <div class="row">
+        <div id='register' class="col-md-4">
+            <table class="table table-striped">
+                <tr><td>Tenant Id: </td><td><input id="tenantid" type="text" size="40" /></td></tr>
+                <tr><td>Client Id: </td><td><input id="clientid" type="text" size="40" /></td></tr>
+                <tr><td>Client Secret: </td><td><input id="clientsecret" type="text" size="40"/></td></tr>
+                <tr><td>Subscription: </td><td><input id="subscription" type="text" size="40" /></td></tr>
+            </table>
+            <input id="onboard" type="button" value="Register" />
+        </div>
+    </div>
+    <div>
+        <p></p>
+        <p>iljoong@outlook.com</p>
+    </div>
+
+</body>
+
+</html>
