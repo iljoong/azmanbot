@@ -1,8 +1,12 @@
-## Bot API
+## Bot API (LUIS)
 
-This bot api handles azure backend management using Azure Service Management api.
+This bot api is the same version of Bot API except natural language support using LUIS.
+
+It includes sample [luisapp](./luisapp/azmanbot_sample.json). You can import this sample luis app to your luis.ai and integrate to your bot api.
 
 ## Build and Test
+
+Update url of luis model in `app.js`
 
 ``
 npm install
@@ -19,4 +23,6 @@ You need to add following environment variables in Application Settings
 * MICROSOFT_APP_PASSWORD
 
 * BILLINGAPIURL - this is url of __usage api__
+
+
 

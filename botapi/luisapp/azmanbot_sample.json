@@ -1,0 +1,787 @@
+{
+  "luis_schema_version": "1.3.0",
+  "name": "azmanbot_sample",
+  "desc": "Managing Azure service using bot",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "List"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "Schedule"
+    },
+    {
+      "name": "Showschedule"
+    },
+    {
+      "name": "Start"
+    },
+    {
+      "name": "Status"
+    },
+    {
+      "name": "Stop"
+    },
+    {
+      "name": "Unschedule"
+    },
+    {
+      "name": "Usage"
+    }
+  ],
+  "entities": [
+    {
+      "name": "cmdtype",
+      "children": [
+        "VM",
+        "Schedule"
+      ]
+    },
+    {
+      "name": "jobcmd"
+    },
+    {
+      "name": "usagedetail"
+    },
+    {
+      "name": "usageformat"
+    },
+    {
+      "name": "vmname"
+    }
+  ],
+  "composites": [],
+  "bing_entities": [
+    "datetime",
+    "number"
+  ],
+  "actions": [
+    {
+      "actionName": "Usage",
+      "intentName": "Usage",
+      "actionParameters": [
+        {
+          "parameterName": "format",
+          "entityName": "usageformat",
+          "required": false
+        },
+        {
+          "parameterName": "detail",
+          "entityName": "usagedetail",
+          "required": false
+        }
+      ]
+    },
+    {
+      "actionName": "List",
+      "intentName": "List",
+      "actionParameters": [
+        {
+          "parameterName": "type",
+          "entityName": "cmdtype",
+          "required": false
+        }
+      ]
+    },
+    {
+      "actionName": "Unschedule",
+      "intentName": "Unschedule",
+      "actionParameters": [
+        {
+          "parameterName": "id",
+          "entityName": "number",
+          "required": true
+        }
+      ]
+    },
+    {
+      "actionName": "Stop",
+      "intentName": "Stop",
+      "actionParameters": [
+        {
+          "parameterName": "vmname",
+          "entityName": "vmname",
+          "required": false
+        }
+      ]
+    },
+    {
+      "actionName": "Start",
+      "intentName": "Start",
+      "actionParameters": [
+        {
+          "parameterName": "vmname",
+          "entityName": "vmname",
+          "required": false
+        }
+      ]
+    },
+    {
+      "actionName": "Status",
+      "intentName": "Status",
+      "actionParameters": [
+        {
+          "parameterName": "vmname",
+          "entityName": "vmname",
+          "required": true
+        }
+      ]
+    },
+    {
+      "actionName": "Schedule",
+      "intentName": "Schedule",
+      "actionParameters": [
+        {
+          "parameterName": "command",
+          "entityName": "jobcmd",
+          "required": true
+        },
+        {
+          "parameterName": "time",
+          "entityName": "datetime",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "model_features": [],
+  "regex_features": [
+    {
+      "name": "vmnameregex",
+      "pattern": "(.+)",
+      "activated": true
+    }
+  ],
+  "utterances": [
+    {
+      "text": "list virtual machine",
+      "intent": "List",
+      "entities": []
+    },
+    {
+      "text": "show me status of virtual machine",
+      "intent": "Status",
+      "entities": []
+    },
+    {
+      "text": "stop vms",
+      "intent": "Stop",
+      "entities": []
+    },
+    {
+      "text": "turn off vm",
+      "intent": "Stop",
+      "entities": []
+    },
+    {
+      "text": "stop virtual machine",
+      "intent": "Stop",
+      "entities": []
+    },
+    {
+      "text": "list my vm",
+      "intent": "List",
+      "entities": []
+    },
+    {
+      "text": "show me a list of virtual machine",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 5,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "show me a list of vm",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "list vm",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "shutdown virtual machine",
+      "intent": "Stop",
+      "entities": []
+    },
+    {
+      "text": "boot vm",
+      "intent": "Start",
+      "entities": []
+    },
+    {
+      "text": "start vm",
+      "intent": "Start",
+      "entities": []
+    },
+    {
+      "text": "show me a list of vms",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "show me my usage by meter",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "start virtual machine",
+      "intent": "Start",
+      "entities": []
+    },
+    {
+      "text": "shutdown vm",
+      "intent": "Stop",
+      "entities": []
+    },
+    {
+      "text": "show me vm status",
+      "intent": "Status",
+      "entities": []
+    },
+    {
+      "text": "show me my usage by date",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "show me status of vm",
+      "intent": "Status",
+      "entities": []
+    },
+    {
+      "text": "show me my detail usage by date",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 6,
+          "endPos": 6
+        },
+        {
+          "entity": "usagedetail",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show me my detail usage by meter",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 6,
+          "endPos": 6
+        },
+        {
+          "entity": "usagedetail",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "turnoff vm",
+      "intent": "Stop",
+      "entities": []
+    },
+    {
+      "text": "show me meter usage",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "start vms",
+      "intent": "Start",
+      "entities": []
+    },
+    {
+      "text": "turn on vm",
+      "intent": "Start",
+      "entities": []
+    },
+    {
+      "text": "show me date usage",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show usage summary",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usagedetail",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me my summary usage",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usagedetail",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show me my detail usage",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usagedetail",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "usage summary",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usagedetail",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "usage detail",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usagedetail",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "usage detail by meter",
+      "intent": "Usage",
+      "entities": [
+        {
+          "entity": "usageformat",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "usagedetail",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "start (vmname)",
+      "intent": "Start",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "start (ilkimvm)",
+      "intent": "Start",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "stop (ilkimvm)",
+      "intent": "Stop",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "start (vm)",
+      "intent": "Start",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "stop (vm)",
+      "intent": "Stop",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "status (vm)",
+      "intent": "Status",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "status (ilkimvm)",
+      "intent": "Status",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me a list of schedule",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::Schedule",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "list sch",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::Schedule",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "list vms",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "list schedule",
+      "intent": "Showschedule",
+      "entities": []
+    },
+    {
+      "text": "show me a list of sch",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::Schedule",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "list of virtual machines",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "list of virtual machine",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::VM",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show me a schedule",
+      "intent": "List",
+      "entities": [
+        {
+          "entity": "cmdtype::Schedule",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show my schedule",
+      "intent": "Showschedule",
+      "entities": []
+    },
+    {
+      "text": "unset 1234",
+      "intent": "Unschedule",
+      "entities": []
+    },
+    {
+      "text": "cancel 1234",
+      "intent": "Unschedule",
+      "entities": []
+    },
+    {
+      "text": "unset schedule 1234",
+      "intent": "Unschedule",
+      "entities": []
+    },
+    {
+      "text": "schedule unset 1234",
+      "intent": "Unschedule",
+      "entities": []
+    },
+    {
+      "text": "cancel",
+      "intent": "Unschedule",
+      "entities": []
+    },
+    {
+      "text": "schedule to start (vms) at 2:00 am daily",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "cmdtype",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "set schedule to start vms at 2:00 am daily",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "cmdtype",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "schedule to stop vms at 2:00 am daily",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "cmdtype",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "schedule to stop vms at 5:00 pm on tuesday weekly",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "cmdtype",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "set to start (vms) at 6:00 am daily",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "cmdtype",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "set to stop (vms) at 6:00 am daily",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "cmdtype",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "set to stop (vms) at 6:00 am monday weekly",
+      "intent": "Schedule",
+      "entities": [
+        {
+          "entity": "vmname",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "cmdtype",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show list of schedule",
+      "intent": "Showschedule",
+      "entities": []
+    },
+    {
+      "text": "show schedule",
+      "intent": "Showschedule",
+      "entities": []
+    },
+    {
+      "text": "show sch",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "show me schedule",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "list of schedule",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "show me my schedule",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "show me my sch",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "schedule list",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "show schedule list",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "show my vm schedule",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "my vm schedule",
+      "intent": "Schedule",
+      "entities": []
+    },
+    {
+      "text": "display schedule",
+      "intent": "Showschedule",
+      "entities": []
+    },
+    {
+      "text": "show list of my schedule",
+      "intent": "Showschedule",
+      "entities": []
+    },
+    {
+      "text": "cancel schedule 12345",
+      "intent": "Unschedule",
+      "entities": []
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 /*
  * azurebot: Azure management bot
- * bot with CLI style
+ * bot with LUIS enabled
  */
 
 var restify = require('restify');
@@ -40,7 +40,14 @@ setInterval(azbot.runSchedule, 300000);  // every 5 min
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // dialog
-var intents = new builder.IntentDialog();
+//var intents = new builder.IntentDialog();
+//bot.dialog('/', intents);
+
+//https://api.projectoxford.ai/luis/v1
+// dialog
+var model = 'https://api.projectoxford.ai/luis/v1/application?id=<add id>&subscription-key=<add key>';
+var recognizer = new builder.LuisRecognizer(model);
+var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 bot.dialog('/', intents);
 
 //it calls every new dialog
@@ -62,9 +69,43 @@ intents.onBegin((session, args, next) => {
     return next();
 });
 
-// features
-intents.matches(/^list/i, [
+function showArgs(cmd, args) {
+    var msg = util.format("%s(%d %%): ", cmd, args.score);
+    if (args.score < 0.5) {
+        for (var i = 1; i < 4; i++) {
+            msg += util.format(">>[%s: score %d]", element.intent, element.score);
+        };
+    }
+
+    if (args.entities[0] !== undefined) {
+        args.entities.forEach(function (element) {
+            if (element.resolution !== undefined) {
+                if (element.resolution.date) {
+                    msg += util.format("[%s:%s, date:%s],", element.entity, element.type, element.resolution.date);
+                } else if (element.resolution.set) {
+                    msg += util.format("[%s:%s, set:%s],", element.entity, element.type, element.resolution.set);
+                } else {
+                    msg += util.format("[%s:%s, time:%s],", element.entity, element.type, element.resolution.time);
+                }
+            }
+            else {
+                msg += util.format("[%s:%s],", element.entity, element.type);
+            }
+
+        }, this);
+
+    }
+
+    return msg;
+}
+
+intents.matches('List', [
     (session, args, next) => {
+        //session.send(showArgs('List', args));
+        if (args.score < 0.5) {
+            session.beginDialog('/dontknow');
+            return;
+        }
 
         var uid = session.message.user.id;
 
@@ -78,63 +119,208 @@ intents.matches(/^list/i, [
 
             session.beginDialog('/list');
         });
-    }]);
+    }
+]);
 
-intents.matches(/^status/i, [
+intents.matches('Status', [
     (session, args, next) => {
+        if (args.score < 0.5) {
+            next({ response: "" });
+            return;
+        }
 
-        var cmd = session.message.text.split(/[ ,]+/);
+        var vmname = (args.entities[0] !== undefined && args.entities[0].type === "vmname") ? args.entities[0].entity : "";
 
-        if (cmd.length > 1) {
-            next({ response: cmd[1] })
+        if (vmname !== "") {
+            next({ response: args.entities[0].entity })
         }
         else {
             builder.Prompts.text(session, "Name of VM to show status?");
         }
-
     },
     (session, results) => {
-        if (results.response) {
+        if (results.response && results.response != "") {
             session.beginDialog('/status', results.response);
+        } else {
+            session.beginDialog('/dontknow');
         }
     }
 ]);
 
-intents.matches(/^start/i, [
+intents.matches('Start', [
     (session, args, next) => {
+        if (args.score < 0.5) {
+            next({ response: "" });
+            return;
+        }
 
-        var cmd = session.message.text.split(/[ ,]+/);
+        var vmname = (args.entities[0] !== undefined && args.entities[0].type === "vmname") ? args.entities[0].entity : "";
 
-        if (cmd.length > 1) {
-            next({ response: cmd[1] });
+        if (vmname !== "") {
+            next({ response: args.entities[0].entity });
 
         } else {
             builder.Prompts.text(session, "Name of VM to start?");
         }
     },
     (session, results) => {
-        if (results.response) {
+        if (results.response && results.response != "") {
             session.beginDialog('/start', results.response);
+        } else {
+            session.beginDialog('/dontknow');
         }
     }
 ]);
 
-intents.matches(/^stop/i, [
+intents.matches('Stop', [
     (session, args, next) => {
-        var cmd = session.message.text.split(/[ ,]+/);
+        if (args.score < 0.5) {
+            next({ response: "" });
+            return;
+        }
 
-        if (cmd.length > 1) {
-            next({ response: cmd[1] });
+        var vmname = (args.entities[0] !== undefined && args.entities[0].type === "vmname") ? args.entities[0].entity : "";
+
+        if (vmname !== "") {
+            next({ response: args.entities[0].entity });
 
         } else {
             builder.Prompts.text(session, "Name of VM to stop?");
         }
+
     },
     (session, results) => {
-        if (results.response) {
-
+        if (results.response && results.response != "") {
             session.beginDialog('/stop', results.response);
+        } else {
+            session.beginDialog('/dontknow');
         }
+    }
+]);
+
+intents.matches('Usage', [
+    (session, args, next) => {
+        if (args.score < 0.5) {
+            session.beginDialog('/dontknow');
+            return;
+        }
+
+        if (args.entities[0] && args.entities[0].type === 'usagedetail') {
+            switch (args.entities[0].entity) {
+                case 'detail':
+                    session.beginDialog('/usagedetail', (args.entities[1] && args.entities[1].type === 'usageformat') ? args.entities[1].entity : undefined);
+                    break;
+                case 'summary':
+                    session.beginDialog('/usagesum');
+            }
+        } else {
+            session.beginDialog('/usagedetail', undefined);
+        }
+    }
+]);
+
+function getOffsetday(input) {
+
+    var input_wd = parseInt(input[0]);
+    var td = new Date();
+    var today_wd = (td.getDay() == 0) ? 7 : td.getDay();
+
+    return (input_wd >= today_wd) ? input_wd - today_wd : (input_wd + 7) - today_wd;
+}
+
+function getOffsetdayByDate(input) {
+
+    var setday = new Date(input);
+    setday.setHours(-9); // adjust KST
+    var today = new Date();
+    var diff = setday - today;
+
+    return (diff < 0) ? 0 : Math.ceil(diff / 86400000);
+}
+
+intents.matches('Schedule', [
+    (session, args, next) => {
+        if (args.score < 0.5) {
+            session.beginDialog('/dontknow');
+            return;
+        }
+
+        var _vmname = '';
+        var _cmd = '';
+        var _time = new Date();
+        var _rep = 0;
+        var _offsetday = 0;
+
+        if (args.entities[0]) {
+            args.entities.forEach(function (element) {
+
+                switch (element.type) {
+                    case 'vmname':
+                        _vmname = element.entity;
+                        break;
+                    case 'cmdtype':
+                        _cmd = element.entity
+                        break;
+                    case 'builtin.datetime.time':
+                        _time = azbot.parseTime(element.resolution.time);
+                        break;
+                    case 'builtin.datetime.set':
+                        if (element.resolution.set.match(/XXXX-WXX-/)) {
+                            //XXXX-WXX-2
+                            _offsetday = getOffsetday(element.resolution.set.match(/\d/));
+                            _rep = 86400000 * 7;
+                        } else {
+                            // daily or weekly
+                            _rep = (element.resolution.set === 'XXXX-XX-XX') ? 86400000 : 86400000 * 7;   //XXXX-XX-WXX
+                        }
+                        break;
+                    case 'builtin.datetime.date':
+                        //element.resolution.date = XXXX-WXX-5
+                        if (element.resolution.date.match(/XXXX-WXX-/)) {
+                            _offsetday = getOffsetday(element.resolution.date.match(/\d/));
+                        } else if (element.resolution.date.match(/\d\d\d\d-\d\d-\d\d/)) {
+                            _offsetday = getOffsetdayByDate(element.resolution.date);
+                        }
+                        break;
+
+                    default:
+                        var _log = util.format("%s", element.type);
+                        console.log(_log);
+                }
+
+            }, this);
+
+            if (session.userData.list === undefined || session.userData.list[_vmname] === undefined) {
+                session.send("vmname `%s` is not listed, ask `list of vm` first", _vmname);
+                // TODO: get list of VM!
+            } else {
+                session.beginDialog('/schedule', [_cmd, _vmname, _time.getTime() + _offsetday * 86400000, _rep]);
+            }
+        }
+    }
+]);
+
+intents.matches('Showschedule', [
+    (session, args, next) => {
+        if (args.score < 0.5) {
+            session.beginDialog('/dontknow');
+            return;
+        }
+
+        session.beginDialog('/showschedule');
+    }
+]);
+
+intents.matches('Unschedule', [
+    (session, args, next) => {
+        if (args.score < 0.5) {
+            session.beginDialog('/dontknow');
+            return;
+        }
+
+        var id = args.entities[0].entity;
+
+        session.beginDialog('/unschedule', id);
     }
 ]);
 
@@ -158,21 +344,16 @@ intents.matches(/^register/i, [
 
 intents.onDefault([
     (session, args, next) => {
+        session.beginDialog('/dontknow');
+    }
+]);
 
-        // intents.matches won't work with long command line. for instance 'sch set start vmname 5:00pm week 2' it returns 0 score
-        var cmd = session.message.text.split(/[ ,]+/);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+bot.dialog('/dontknow', [
+    function (session, args, next) {
 
-        switch (cmd[0].toLowerCase()) {
-            case 'usage':
-                azbot.usage(session, args, next);
-                break;
-            case 'sch':
-                azbot.sch(session, args, next);
-                break;
-            default:
-                session.send('Unknown command, please type `help` for available commands');
-                session.endDialog();
-        }
+        session.send("I don't understand, please type `help`");
+        session.endDialog();
     }
 ]);
 
@@ -222,8 +403,6 @@ bot.dialog('/list', [
                     session.send("Something wrong!");
                 }
             });
-
-
         }
 
         session.endDialog();

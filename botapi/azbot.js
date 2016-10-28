@@ -23,27 +23,27 @@ var azbot = {
         if (!b) return;
 
         var d = new Date();
-        d.setHours(b[0] > 12 ? b[0] : b[0] % 12 + (/p/i.test(time) ? 12 : 0), // hours
+        d.setHours(b[0], // hours
             /\d/.test(b[1]) ? b[1] : 0,     // minutes
             /\d/.test(b[2]) ? b[2] : 0);    // seconds
         return d;
     },
 
     // help cmd
-    cmdlist: 'list',
-    cmdstart: 'start `vmname`',
-    cmdstop: 'stop `vmname`',
-    cmdstatus: 'status `vmname`',
-    cmdusage: 'usage [sum | detail [meter|date]',
-    cmdschset: 'sch set [start|stop|echo] `vmname` `time` [once*|d(ay)|w(eek) n]',
-    cmdschunset: 'sch unset `id`',
-    cmdschshow: 'sch show',
+    cmdlist: 'show list of vms',
+    cmdstart: 'start (`vmname`)',
+    cmdstop: 'stop (`vmname`)',
+    cmdstatus: 'show status of (`vmname`)',
+    cmdusage: 'show usage summary\n\n* show detail usage by date\n\n* show detail usage by meter',
+    cmdschset: 'set schedule to start (`vmname`) at 8:55 am daily',
+    cmdschunset: 'cancel schedule `id`',
+    cmdschshow: 'show list of schedule',
     cmddebug: 'debug',
 
     help: function (session) {
 
         // DO NOT USE "<vmname>" syntax, this will cause 'BAD REQUEST' in skype bot
-        var helpdoc = "## Commands List\n\n";
+        var helpdoc = "## Sample conversations\n\n";
         helpdoc += util.format("* %s\n\n* %s\n\n* %s\n\n", azbot.cmdlist, azbot.cmdstart, azbot.cmdstop);
         helpdoc += util.format("* %s\n\n* %s\n\n* %s\n\n", azbot.cmdstatus, azbot.cmdusage, azbot.cmdschset);
         helpdoc += util.format("* %s\n\n* %s\n\n* %s\n\n", azbot.cmdschunset, azbot.cmdschshow, azbot.cmddebug);
