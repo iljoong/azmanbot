@@ -21,7 +21,7 @@ Basic chatbot api. It understands only CLI style chat. e.g., You can set azure v
 _note: For entering the time, you have to enter am or pm with no space. i.e., `8:55am` is okay but `8:55 am` is NOT okay_
 
 
-[botapi cli/master branch](./tree/cli/botapi)
+[botapi cli/master branch](https://github.com/iljoong/azmanbot/tree/cli/botapi)
 
 _Click to see demo_
 
@@ -33,7 +33,7 @@ Chatbot api with [LUIS](https://www.luis.ai). It understands natural language ch
 
 _note: LUIS version of chatbot understands various way of time and date._
 
-[botapi luis branch](./tree/luis/botapi)
+[botapi luis branch](https://github.com/iljoong/azmanbot/tree/luis/botapi)
 
 _Click to see demo_
 

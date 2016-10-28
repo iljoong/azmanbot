@@ -8,11 +8,11 @@ It includes sample [luisapp](./luisapp/azmanbot_sample.json). You can import thi
 
 Update url of luis model in `app.js`
 
-``
+```
 npm install
 
 npm start
-``
+```
 
 ## Deploy to Azure
 
