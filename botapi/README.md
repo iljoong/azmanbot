@@ -4,11 +4,11 @@ This bot api handles azure backend management using Azure Service Management api
 
 ## Build and Test
 
-``
+```
 npm install
 
 npm start
-``
+```
 
 ## Deploy to Azure
 
