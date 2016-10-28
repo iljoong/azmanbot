@@ -1,22 +1,24 @@
 # Azure Management Bot (AzmanBot)
 
+[한글](./README_kr.md)
+
 ## Overview
 
-This sample demonstrates to show how to build chat bot app that manages azure backend, such as stop/start VMs.
-This chat bot simplifies some azure management without login to Azure Portal. It also has scheduling feature to stop/start VMs.
+This sample demonstrates how to build chat bot app that manages ㅁzure backend, such as stop/start VMs.
+This chat bot simplifies some management without login to Azure Portal. It also has scheduling feature to stop/start VMs.
 In addition to Azure management, chat bot understands natural language by integrating with [LUIS](https://www.luis.ai).
 
 **CAUTION**: This sample requires to store azure subscription information in host api app, including secret key. It is recommended to use for private bot service.
 
 ## APIs
 
-Azmanbot is a sample chatbot using botframework from Microsoft. This bot service consists of two api services, i.e., Bot API and Usage API.
+Azmanbot is a chatbot service utilizing botframework from Microsoft. This bot service consists of two API apps, i.e., Bot API and Usage API.
 
-Bot API does not support natural language chat and it only supports CLI (Command Line Interface) like chatting. If you want to support natural language you can use Bot API with LUIS instead.
+Basic Bot API does not support natural language chat and it only supports CLI (Command Line Interface) like chatting. If you want to support natural language you can use Bot API with LUIS instead.
 
 ### Bot API
 
-Basic chatbot api. It understands only CLI style chat. e.g., You can set azure vm to start every week at 8:55 am (as of executing day) by `sch start azurevm 8:55am week`
+This is the basic chatbot api. It understands only CLI style chat. e.g., You can set azure vm to start every week at 8:55 am (as of executing day) by `sch start azurevm 8:55am week`
 
 _note: For entering the time, you have to enter am or pm with no space. i.e., `8:55am` is okay but `8:55 am` is NOT okay_
 
@@ -41,7 +43,7 @@ _Click to see demo_
 
 ### Usage API
 
-Azure subscription billing usage api. It is written in C#/.NET core. because it can handle complex data query by built-in LINQ feature.
+Azure subscription billing usage api. It is written in C#/.NET core because it can handle complex data query by built-in LINQ feature.
 
 [usageapi](./usageapi)
 
@@ -69,7 +71,7 @@ Azure subscription billing usage api. It is written in C#/.NET core. because it 
 
     * Filter and calculate usage using LINQ
 
-* Scheduling (sch)
+* Scheduling
 
     * start/stop VM on schedule time
 
@@ -81,7 +83,7 @@ Azure subscription billing usage api. It is written in C#/.NET core. because it 
 
     * Stateful user info (subscription and etc.)
 
-* Server message (/api/message/:userid)
+* Server trigger message (/api/message/:userid)
 
     * send a message to user from backend 
 
